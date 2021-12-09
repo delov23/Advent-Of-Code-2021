@@ -29,7 +29,6 @@ for (let i = 0; i < inputLines.length; i += 5) {
     ]);
 }
 
-let winningMatrix;
 let winningNumber;
 
 outer: for (let numberIndex = 4; numberIndex < numbers.length; numberIndex++) {
@@ -51,14 +50,17 @@ outer: for (let numberIndex = 4; numberIndex < numbers.length; numberIndex++) {
                 }
 
                 if (counter === 5 && matrices.length > 1) {
-                    winningMatrix = [...matrix];
                     matrices = matrices.filter((m, mi) => mi !== matrixIndex);
-                    continue outer;
-                } else if (counter === 5 && matrices.length === 1) {
-                    winningMatrix = [...matrix];
+                }
+
+                if (matrices.length === 1) {
                     break outer;
                 }
             }
+        }
+
+        if (matrices.length === 1) {
+            break outer;
         }
 
         // vertical search
@@ -74,30 +76,36 @@ outer: for (let numberIndex = 4; numberIndex < numbers.length; numberIndex++) {
                 }
 
                 if (counter === 5 && matrices.length > 1) {
-                    winningMatrix = [...matrix];
                     matrices.filter((m, mi) => mi !== matrixIndex);
-                    continue outer;
-                } else if (counter === 5 && matrices.length === 1) {
-                    winningMatrix = [...matrix];
+                } 
+
+                if (matrices.length === 1) {
                     break outer;
                 }
             }
+        }
+
+        if (matrices.length === 1) {
+            break outer;
         }
     }
 }
 
 const winningNumbers = numbers.slice(0, numbers.indexOf(winningNumber) + 1);
+const winningMatrix = matrices[0];
 
-const sum = winningMatrix.reduce((prev, curr) => {
-    const prevSum = curr.reduce((p, a) => {
-        if (!winningNumbers.includes(a)) {
-            return p + a;
+console.log(winningMatrix);
+console.log(winningNumber);
+
+let sum = 0;
+console.log(winningNumbers);
+
+winningMatrix.forEach((line) => {
+    line.forEach((item) => {
+        if (!winningNumbers.includes(item)) {
+            sum += item;
         }
-
-        return p;
-    }, 0);
-
-    return prev + prevSum;
-}, 0);
+    });
+});
 
 console.log(sum * winningNumber);
